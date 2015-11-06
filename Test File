@@ -1,1 +1,20 @@
 This is a test file
+Windows PowerShell
+Copyright (C) 2015 Microsoft Corporation. All rights reserved.
+
+C:\Users\Jennifer\Documents\GitHub> cd Digital-Circuit-Designer
+C:\Users\Jennifer\Documents\GitHub\Digital-Circuit-Designer [master +1 ~0 -0 !]> git add "test2.txt"
+C:\Users\Jennifer\Documents\GitHub\Digital-Circuit-Designer [master +1 ~0 -0]> git commit -m "test2"
+[master f9aed1c] test2
+ 1 file changed, 1 insertion(+)
+ create mode 100644 test2.txt
+C:\Users\Jennifer\Documents\GitHub\Digital-Circuit-Designer [master]> git push origin master
+Counting objects: 4, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 320 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/JenniferPacheco/Digital-Circuit-Designer.git
+   44ee0e3..f9aed1c  master -> master
+C:\Users\Jennifer\Documents\GitHub\Digital-Circuit-Designer [master]>
+C:\Users\Jennifer\Documents\GitHub\Digital-Circuit-DesignerPS>
