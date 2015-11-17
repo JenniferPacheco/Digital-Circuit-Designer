@@ -33,4 +33,20 @@ public class NANDGate extends LogicGate {
 			}
 		}
 	}
+	
+	@Override
+	public void processingState(String state) {
+		for (LogicGate test : inputConnections) {
+			if (test.stateOutput == -1) {
+				test.processingState(state);
+			}
+			
+			if (test.stateOutput == 0) {
+				this.stateOutput = 1;
+				break;
+			} else {
+				this.stateOutput = 0;
+			}
+		}
+	}
 }

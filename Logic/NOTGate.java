@@ -23,4 +23,19 @@ public class NOTGate extends LogicGate {
 			this.output = "~" + test.output;
 		}
 	}
+	
+	@Override
+	public void processingState(String state) {
+		LogicGate test = inputConnections.get(0);
+		
+		if (test.stateOutput == -1) {
+			test.processingState(state);
+		}
+		
+		if (test.stateOutput == 0) {
+			this.stateOutput = 1;
+		} else {
+			this.stateOutput = 0;
+		}
+	}
 }

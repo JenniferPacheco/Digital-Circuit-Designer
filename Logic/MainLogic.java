@@ -8,13 +8,14 @@ public class MainLogic {
 	String[] fourVarInput = {"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"};
 	
 	//Method for going through and calculating the output of the circuit
+	//creates the unsimplified boolean expression
 	public String DFSRunThrough() {
 		nodeList.get(0).performOperation();
 		return "";
 	}
 	
 	//Method for determining the K-Map
-	//need to determine what it returns exactly. Picture?
+	//creates output table ;)
 	public void generateKMap() {
 		//determine the number of variables being used
 		//and send the correct blank kmap to the GUI
@@ -28,9 +29,10 @@ public class MainLogic {
 	}
 	
 	//Method for determining the boolean expression
-	public String generateBoolExp() {
-		return "";
-	}
+	//Too complex to code right now. Saw a C++ file of the execution
+//	public String generateMinMaxExp() {
+//		return "";
+//	}
 	
 	//Method for connecting two logic gates
 	public void makeConnection(LogicGate outputGate, LogicGate inputGate) {

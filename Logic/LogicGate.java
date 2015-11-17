@@ -9,6 +9,7 @@ public class LogicGate {
 												//AND, NAND, OR, NOR, XOR, XNOR, NOT
 	String output = "";							//Should be a 0 (false), 1 (true), or variable
 												//initially null to specify the operation hasn't been performed
+	int stateOutput = -1;
 	boolean finalOutput;
 	
 	//Simple constructor method. 

@@ -33,4 +33,20 @@ public class NORGate extends LogicGate {
 			}
 		}
 	}
+	
+	@Override
+	public void processingState(String state) {
+		for (LogicGate test : inputConnections) {
+			if (test.stateOutput == -1) {
+				test.processingState(state);
+			}
+			
+			if (test.stateOutput == 1) {
+				this.stateOutput = 0;
+				break;
+			} else {
+				this.stateOutput = 1;
+			}
+		}
+	}
 }
