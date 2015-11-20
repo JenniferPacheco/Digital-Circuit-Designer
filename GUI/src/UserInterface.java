@@ -12,21 +12,21 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 //class containing necessary info for each gate
-class logicalGate{
-	
-	int numInputs;
-	String gateName;
-	String gateType;
-	String [] inputs;
-	int level;
-	
-};
+//class LogicGate{
+//	
+//	int numInputs;
+//	String gateName;
+//	String gateType;
+//	String [] inputs;
+//	int level;
+//	
+//};
 
 public class UserInterface implements ActionListener, ItemListener, ListSelectionListener {
 	
 	//array of logic gates, 13 is max number of gates
 	//4 for each of the first 3 levels and 1 for the last level
-	logicalGate [] userGates = new logicalGate [13]; 
+	LogicGate [] userGates = new LogicGate [13]; 
 	
 	//initialize counting variables for the number of gates
 	int numGates = 0;
@@ -317,6 +317,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 	public static void main( String[] args ) {
 		UserInterface ui = new UserInterface();
 		ui.CreateUI();
+		MainLogic theMainLogic = new MainLogic();
 	}
 
 	@Override
@@ -362,7 +363,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(connections)){
 			
 			if(numGates > 0 && numGatesInLevel[0]==1)
-				createlogicalGate();
+				createLogicGate();
 			else{
 				if(numGates == 0)
 					JOptionPane.showMessageDialog(frame, "No gates to connect. Add gates.");
@@ -429,9 +430,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(and2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
-			userGates[numGates].numInputs = 2;
-			userGates[numGates].gateType = "And";
+			userGates[numGates] = new ANDGate(2);
 			
 			//numAnds is used to name the different ands as we add them to the JList
 			//maybe we can label each with their name as we draw them to make the 
@@ -453,7 +452,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(and3)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 3;
 			userGates[numGates].gateType = "And";
 			
@@ -477,7 +476,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(and4)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 4;
 			userGates[numGates].gateType = "And";
 			
@@ -501,9 +500,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(or2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
-			userGates[numGates].numInputs = 2;
-			userGates[numGates].gateType = "Or";
+			userGates[numGates] = new ORGate(2);
 			
 			//numOrs is used to name the different ands as we add them to the JList
 			//maybe we can label each with their name as we draw them to make the 
@@ -525,7 +522,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(or3)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new ORGate(3);
 			userGates[numGates].numInputs = 3;
 			userGates[numGates].gateType = "Or";
 			
@@ -549,7 +546,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(or4)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 4;
 			userGates[numGates].gateType = "Or";
 			
@@ -573,7 +570,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nand2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 2;
 			userGates[numGates].gateType = "Nand";
 			
@@ -597,7 +594,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nand3)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 3;
 			userGates[numGates].gateType = "Aand";
 			
@@ -621,7 +618,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nand4)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 4;
 			userGates[numGates].gateType = "Nand";
 			
@@ -645,9 +642,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nor2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
-			userGates[numGates].numInputs = 2;
-			userGates[numGates].gateType = "Nor";
+			userGates[numGates] = new NORGate(2);
 			
 			//numNors is used to name the different ands as we add them to the JList
 			//maybe we can label each with their name as we draw them to make the 
@@ -669,7 +664,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nor3)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 3;
 			userGates[numGates].gateType = "Nor";
 			
@@ -693,7 +688,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(nor4)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 4;
 			userGates[numGates].gateType = "Nor";
 			
@@ -717,7 +712,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(not)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 1;
 			userGates[numGates].gateType = "Not";
 			
@@ -741,7 +736,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(xnor2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 2;
 			userGates[numGates].gateType = "Xnor";
 			
@@ -765,7 +760,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		if(source.equals(xor2)){
 			
 			//set up values in the new logic gate
-			userGates[numGates] = new logicalGate();
+			userGates[numGates] = new LogicGate();
 			userGates[numGates].numInputs = 2;
 			userGates[numGates].gateType = "Xor";
 			
@@ -792,7 +787,7 @@ public class UserInterface implements ActionListener, ItemListener, ListSelectio
 		
 	}
 	
-	public void createlogicalGate(){
+	public void createLogicGate(){
 
 		//reset the combobox and list upon opening the new menu
 		newMenu.setVisible(true);
