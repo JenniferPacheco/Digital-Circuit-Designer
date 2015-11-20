@@ -9,9 +9,9 @@ public class LogicGate {
 												//AND, NAND, OR, NOR, XOR, XNOR, NOT
 	String output = "";							//Should be a 0 (false), 1 (true), or variable
 												//initially null to specify the operation hasn't been performed
-	int stateOutput = -1;
-	boolean finalOutput;
-	
+	int stateOutput = -1;						//Should be only 0 or 1
+	boolean finalOutput = false;						//Probably don't need this anymore since we can tell by the level of the gate
+
 	//Simple constructor method. 
 	//Inputs: numInput: the # of inputs the gate will have
 	//		  operation: what kind of gate is this (list is above)

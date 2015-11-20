@@ -1,14 +1,14 @@
 public class OutputTable 
 {
-	static String[] AStates = {"0","1"};
-	static String[] ABStates = {"00","01","10","11"};
-	static String[] ABCStates = {"000","001","010","011","100","101","110","111"};
-	static String[] ABCDStates = {"0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"};
+	static String[] WStates = {"0","1"};
+	static String[] WXStates = {"00","01","10","11"};
+	static String[] WXYStates = {"000","001","010","011","100","101","110","111"};
+	static String[] WXYZStates = {"0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"};
 	//static String[] AStates = {"0","1"};
 	//static String[] ABStates = {"00","01","11","10"};
 	//static String[] ABCStates = {"000","001","011","010","100","101","111","110"};
 	//static String[] ABCDStates = {"0000","0001","0011","0010","0100","0101","0111","0110","1000","1001","1011","1010","1100","1101","1111","1110"};
-	static String[][] States = {AStates,ABStates,ABCStates,ABCDStates};
+	static String[][] States = {WStates,WXStates,WXYStates,WXYZStates};
 	
 	static String[][] buildTable(String boolStr, int varCount)
 	{
@@ -16,63 +16,118 @@ public class OutputTable
 		
 		if (varCount == 0)
 		{
-			String[][] outputTable = new String[1][1];
-			outputTable[0][0] = "";
+			String[][] outputTable = new String[2][1];
+			
+			outputTable[0][0] = "Out";
+			
+			outputTable[1][0] = parseBool(boolStr,States[0][0]);
 			return outputTable;
 		}
+		
 		else if (varCount == 1)
 		{
-			String[][]outputTable = new String[1][2];
+			String[][]outputTable = new String[3][2];
 			
-			for (int j=0; j<2; j++)
+			outputTable[0][0] = "W";
+			outputTable[0][1] = "Out";
+			
+			for (int i=0; i<2; i++)
 			{
-				outputTable[0][j] = parseBool(boolStr,States[varCount-1][j]);
+				outputTable[i+1][0] = States[varCount-1][i];
+				//System.out.println(outputTable[i]);
+			}
+			
+			for (int i=0; i<2; i++)
+			{
+				outputTable[i+1][1] = parseBool(boolStr,States[varCount-1][i]);
 				//System.out.println(outputTable[i]);
 			}
 			
 			return outputTable;
 		}
+		
 		else if (varCount == 2)
 		{
-			String[][]outputTable = new String[2][2];
-			for(int i=0; i<2; i++)
+			String[][]outputTable = new String[5][3];
+			
+			outputTable[0][0] = "W";
+			outputTable[0][1] = "X";
+			outputTable[0][2] = "Out";
+			
+			for(int i=0; i<4; i++)
 			{
 				for (int j=0; j<2; j++)
 				{
-					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
-					x++;
+					String state = States[varCount-1][i];
+					outputTable[i+1][j] = Character.toString(state.charAt(j));
 					//System.out.println(outputTable[i]);
 				}
 			}
 			
+			for (int i=0; i<4; i++)
+			{
+				outputTable[i+1][2] = parseBool(boolStr,States[varCount-1][x]);
+				x++;
+				//System.out.println(outputTable[i]);
+			}
+			
 			return outputTable;
 		}
+		
 		else if (varCount == 3)
 		{
-			String[][]outputTable = new String[2][4];
-			for(int i=0; i<2; i++)
+			String[][]outputTable = new String[9][4];
+			
+			outputTable[0][0] = "W";
+			outputTable[0][1] = "X";
+			outputTable[0][2] = "Y";
+			outputTable[0][3] = "Out";
+			
+			for(int i=0; i<8; i++)
 			{
-				for (int j=0; j<4; j++)
+				for (int j=0; j<3; j++)
 				{
-					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
+					String state = States[varCount-1][i];
+					outputTable[i+1][j] = Character.toString(state.charAt(j));
 					//System.out.println(outputTable[i]);
-					x++;
 				}
+			}
+			
+			for (int i=0; i<8; i++)
+			{
+				outputTable[i+1][3] = parseBool(boolStr,States[varCount-1][x]);
+				x++;
+				//System.out.println(outputTable[i]);
 			}
 			
 			return outputTable;
 		}
+		
 		else
 		{
-			String[][]outputTable = new String[4][4];
-			for(int i=0; i<4; i++)
+			String[][]outputTable = new String[17][5];
+			
+			outputTable[0][0] = "W";
+			outputTable[0][1] = "X";
+			outputTable[0][2] = "Y";
+			outputTable[0][3] = "Z";
+			outputTable[0][4] = "Out";
+			
+			for(int i=0; i<16; i++)
 			{
 				for (int j=0; j<4; j++)
 				{
-					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
+					String state = States[varCount-1][i];
+					outputTable[i+1][j] = Character.toString(state.charAt(j));
 					//System.out.println(outputTable[i]);
-					x++;
 				}
+			}
+			
+			for (int i=0; i<16; i++)
+			{
+				outputTable[i+1][4] = parseBool(boolStr,States[varCount-1][x]);
+				x++;
+				//System.out.println(outputTable[i]);
 			}
 			
 			return outputTable;
@@ -96,35 +151,21 @@ public class OutputTable
 		if((boolStr == null) || (boolStr.length() == 0))
 			return boolStr;
 		
-		if(boolStr.charAt(0) == 'a')											//is the current first char an a?
+		if(boolStr.charAt(0) == 'w')											//is the current first char an a?
 			return state.charAt(0) + firstPass(boolStr.substring(1), state);	//recursive return necessary number and string starting at next char
 		
-		else if(boolStr.charAt(0) == 'b')										//is the current first char a b?
+		else if(boolStr.charAt(0) == 'x')										//is the current first char a b?
 			return state.charAt(1) + firstPass(boolStr.substring(1), state);	//recursive return necessary number and string starting at next char
 		
-		else if(boolStr.charAt(0) == 'c')										//is the current first char a c?
+		else if(boolStr.charAt(0) == 'y')										//is the current first char a c?
 			return state.charAt(2) + firstPass(boolStr.substring(1), state);	//recursive return necessary number and string starting at next char
 		
-		else if(boolStr.charAt(0) == 'd')										//is the current first char a d?
+		else if(boolStr.charAt(0) == 'z')										//is the current first char a d?
 			return state.charAt(3) + firstPass(boolStr.substring(1), state);	//recursive return necessary number and string starting at next char
 		
 		else																	//not an a,b,c, or d
 			return boolStr.charAt(0) + firstPass(boolStr.substring(1), state);	//continue to next char
 	}
-	
-/*
-	static String secondPass(String boolStr)
-	{
-		if((boolStr == null) || (boolStr.length() == 0))
-			return boolStr;
-		if(boolStr.charAt(0) == '~' && boolStr.charAt(1) == '0')											//is the current first char an a?
-			return '1' + secondPass(boolStr.substring(2));	//recursive return necessary number and string starting at next char
-		else if(boolStr.charAt(0) == '~' && boolStr.charAt(1) == '1')											//is the current first char an a?
-			return '0' + secondPass(boolStr.substring(2));	//recursive return necessary number and string starting at next char
-		else																	//not an a,b,c, or d
-			return boolStr.charAt(0) + secondPass(boolStr.substring(1));	//continue to next char
-	}
-*/
 	
 	static String termReduce(String boolStr)
 	{
