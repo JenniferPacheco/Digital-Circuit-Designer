@@ -10,21 +10,69 @@ public class OutputTable
 	//static String[] ABCDStates = {"0000","0001","0011","0010","0100","0101","0111","0110","1000","1001","1011","1010","1100","1101","1111","1110"};
 	static String[][] States = {AStates,ABStates,ABCStates,ABCDStates};
 	
-	static String[] buildTable(String boolStr, int varCount)
+	static String[][] buildTable(String boolStr, int varCount)
 	{
+		int x = 0;
+		
 		if (varCount == 0)
 		{
-			String[] outputTable = new String[1];
-			outputTable[0] = "";
+			String[][] outputTable = new String[1][1];
+			outputTable[0][0] = "";
+			return outputTable;
+		}
+		else if (varCount == 1)
+		{
+			String[][]outputTable = new String[1][2];
+			
+			for (int j=0; j<2; j++)
+			{
+				outputTable[0][j] = parseBool(boolStr,States[varCount-1][j]);
+				//System.out.println(outputTable[i]);
+			}
+			
+			return outputTable;
+		}
+		else if (varCount == 2)
+		{
+			String[][]outputTable = new String[2][2];
+			for(int i=0; i<2; i++)
+			{
+				for (int j=0; j<2; j++)
+				{
+					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
+					x++;
+					//System.out.println(outputTable[i]);
+				}
+			}
+			
+			return outputTable;
+		}
+		else if (varCount == 3)
+		{
+			String[][]outputTable = new String[2][4];
+			for(int i=0; i<2; i++)
+			{
+				for (int j=0; j<4; j++)
+				{
+					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
+					//System.out.println(outputTable[i]);
+					x++;
+				}
+			}
+			
 			return outputTable;
 		}
 		else
 		{
-			String[]outputTable = new String[(int) Math.pow(2, varCount)];
-			for(int i=0; i<outputTable.length; i++)
+			String[][]outputTable = new String[4][4];
+			for(int i=0; i<4; i++)
 			{
-				outputTable[i] = parseBool(boolStr,States[varCount-1][i]);
-				//System.out.println(outputTable[i]);
+				for (int j=0; j<4; j++)
+				{
+					outputTable[i][j] = parseBool(boolStr,States[varCount-1][x]);
+					//System.out.println(outputTable[i]);
+					x++;
+				}
 			}
 			
 			return outputTable;
