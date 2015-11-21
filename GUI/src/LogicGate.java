@@ -25,6 +25,8 @@ public class LogicGate {
 	public LogicGate(int numInputs, String operation) {
 		this.numInputs = numInputs;
 		this.operation = operation;
+		this.inputConnections = new ArrayList<LogicGate>();
+		this.outputConnections = new ArrayList<LogicGate>();
 	}
 	
 	//method will be overridden by subclasses

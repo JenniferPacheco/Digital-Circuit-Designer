@@ -48,9 +48,10 @@ public class MainLogic {
 		nodeList.add(newGate);
 	}
 	
-	public void createGate(String gateName) {
+	public LogicGate createGate(String gateName) {
 		varGate newGate = new varGate(gateName);
 		nodeList.add(newGate);
+		return newGate;
 	}
 	
 	//Method for determining the K-Map
