@@ -16,6 +16,7 @@ public class MainLogic {
 		for (LogicGate gate : nodeList) {
 			if (gate.finalOutput) {
 				startingNode = gate;
+				break;
 			}
 		}
 		
@@ -73,7 +74,7 @@ public class MainLogic {
 	
 	public LogicGate createGate(String gateName) {
 		varGate newGate = new varGate(gateName);
-		nodeList.add(newGate);
+		//nodeList.add(newGate);
 		return newGate;
 	}
 	

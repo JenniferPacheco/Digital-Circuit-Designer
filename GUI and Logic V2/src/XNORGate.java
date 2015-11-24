@@ -13,28 +13,44 @@ public class XNORGate extends LogicGate {
 		int numOnes = 0;
 		String variables = "";
 		
-		for (int i = 0; i < inputConnections.size(); i++) {
-			LogicGate test = inputConnections.get(i);
-			
-			if (test.output == "") {
-				test.performOperation();
-			}
-			
-			if (test.output == "1") {
-				numOnes++;
-			} else {
-				if (variables == "") {
-					variables = test.output;
-				} else {
-					variables += "^" + test.output;
-				}
-			}
-		}
+//		for (int i = 0; i < inputConnections.size(); i++) {
+//			LogicGate test = inputConnections.get(i);
+//			
+//			if (test.output == "") {
+//				test.performOperation();
+//			}
+//			
+//			if (test.output == "1") {
+//				numOnes++;
+//			} else {
+//				if (variables == "") {
+//					variables = test.output;
+//				} else {
+//					variables += "^" + test.output;
+//				}
+//			}
+//		}
+//		
+//		if (numOnes % 2 == 0) {
+//			this.output = "~(" + variables + "^1)";
+//		} else {
+//			this.output = "~(" + variables + "^0)";
+//		}
 		
-		if (numOnes % 2 == 0) {
-			this.output = "~(" + variables + "^1)";
-		} else {
-			this.output = "~(" + variables + "^0)";
+		for (int i = 0; i < inputConnections.size(); i++) {
+			LogicGate testGate = inputConnections.get(i);
+			
+			if (testGate.output == "") {
+				testGate.performOperation();
+			}
+			
+			if (this.output == "") {
+				this.output = "~(" + testGate.output;
+			} else if (i + 1 == inputConnections.size()) {
+				this.output += "^" + testGate.output + ")";
+			} else {
+				this.output += "^" + testGate.output;
+			}
 		}
 	}
 	

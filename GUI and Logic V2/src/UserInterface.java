@@ -29,6 +29,12 @@ import javax.swing.event.ListSelectionListener;
 
 public class UserInterface extends JPanel implements ActionListener, ItemListener, ListSelectionListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	//array of logic gates, 13 is max number of gates
 	//4 for each of the first 3 levels and 1 for the last level
 	LogicGate [] userGates = new LogicGate [13]; 
@@ -45,6 +51,12 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	int numNors = 0;
 	int numNots = 0;
 	int numNands = 0;
+	
+	//flags to know what variables are being used
+	boolean flagW = false;
+	boolean flagX = false;
+	boolean flagY = false;
+	boolean flagZ = false;
 	
 	//array to hold the number of gates in each level
 	//to ensure that we don't go over the max
@@ -78,7 +90,11 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	JMenuItem nor4;
 	
 	JMenuItem xor2;
+	JMenuItem xor3;
+	JMenuItem xor4;
 	JMenuItem xnor2;
+	JMenuItem xnor3;
+	JMenuItem xnor4;
 	JMenuItem not;
 	
 	JMenuItem manual;
@@ -185,16 +201,28 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
         //xor gate menu
         JMenu xorMenu = new JMenu("XOR Gates");
         menuBar.add(xorMenu);
-        xor2 = new JMenuItem("XOR", new ImageIcon("images/2inputXOR.png"));
+        xor2 = new JMenuItem("2 Inputs", new ImageIcon("images/2inputXOR.png"));
         xor2.addActionListener(this);
         xorMenu.add(xor2);
+        xor3 = new JMenuItem("3 Inputs", new ImageIcon("images/3inputXOR.png"));
+        xor3.addActionListener(this);
+        xorMenu.add(xor3);
+        xor4 = new JMenuItem("4 Inputs", new ImageIcon("images/4inputXOR.png"));
+        xor4.addActionListener(this);
+        xorMenu.add(xor4);
         
         //xnor gate menu
         JMenu xnorMenu = new JMenu("XNOR Gates");
         menuBar.add(xnorMenu);
-        xnor2 = new JMenuItem("XNOR", new ImageIcon("images/2inputXNOR.png"));
+        xnor2 = new JMenuItem("2 Inputs", new ImageIcon("images/2inputXNOR.png"));
         xnor2.addActionListener(this);
         xnorMenu.add(xnor2);
+        xnor3 = new JMenuItem("3 Inputs", new ImageIcon("images/3inputXNOR.png"));
+        xnor3.addActionListener(this);
+        xnorMenu.add(xnor3);
+        xnor4 = new JMenuItem("4 Inputs", new ImageIcon("images/4inputXNOR.png"));
+        xnor4.addActionListener(this);
+        xnorMenu.add(xnor4);
         
         //not gate menu
         JMenu notMenu = new JMenu("NOT Gate");
@@ -495,12 +523,15 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	        		//if the input is x,y,z,0,or 1 create varGates and set flags
 	        		if(userGates[index].inputs[i] == "x"){
 	        			theMainLogic.makeConnection(theMainLogic.createGate("x"), theMainLogic.nodeList.get(index));
+	        			flagX = true;
 	        		}
 	        		else if(userGates[index].inputs[i] == "y"){
 	        			theMainLogic.makeConnection(theMainLogic.createGate("y"), theMainLogic.nodeList.get(index));
+	        			flagY = true;
 	        		}
 	        		else if(userGates[index].inputs[i] == "z"){
 	        			theMainLogic.makeConnection(theMainLogic.createGate("z"), theMainLogic.nodeList.get(index));
+	        			flagZ = true;
 	        		}
 	        		else if(userGates[index].inputs[i] == "0"){
 	        			theMainLogic.makeConnection(theMainLogic.createGate("0"), theMainLogic.nodeList.get(index));
@@ -510,11 +541,12 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	        		}
 	        		else if(userGates[index].inputs[i] == "w"){
 	        			theMainLogic.makeConnection(theMainLogic.createGate("w"), theMainLogic.nodeList.get(index));
+	        			flagW = true;
 	        		}
 	        		
 	        		for (int j = 0; j < numGates; j++) {
 	        			if (userGates[j].gateName == userGates[index].inputs[i]) {
-	        				theMainLogic.makeConnection(userGates[j], theMainLogic.nodeList.get(index));
+	        				theMainLogic.makeConnection(theMainLogic.nodeList.get(j), theMainLogic.nodeList.get(index));
 	        				break;
 	        			}
 	        		}
@@ -1061,10 +1093,80 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].setVisible(true);
 				
 				numGates++;
-				numXnors++;
-				
+				numXnors++;	
 			}
+		}
+		
+		//xnor gate with 3 inputs
+		if(source.equals(xnor3)){
 			
+			//set up values in the new logic gate
+			userGates[numGates] = new XNORGate(3);
+			
+			//numXnors is used to name the different ands as we add them to the JList
+			//maybe we can label each with their name as we draw them to make the 
+			//distinction for the user to use while picking inputs
+			userGates[numGates].gateName = "XNOR" + numXnors;
+			userGates[numGates].inputs = new String[2];
+			
+			int level = pickLevel();
+			
+			//makes sure that the level is valid and creates the gate
+			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
+				
+				if(userGates[numGates].finalOutput)
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
+				else
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				gates.addElement(userGates[numGates].gateName);
+				
+				drawLevels[drawLevels.length - level].setVisible(false);
+				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
+				image = new ImageIcon("images/3inputXNOR.png");
+				JLabel label = new JLabel(image);
+				label.setVisible(true);
+				drawLevels[drawLevels.length - level].add(label);
+				drawLevels[drawLevels.length - level].setVisible(true);
+				
+				numGates++;
+				numXnors++;	
+			}
+		}
+				
+		//xnor gate with 4 inputs
+		if(source.equals(xnor4)){
+			
+			//set up values in the new logic gate
+			userGates[numGates] = new XNORGate(4);
+			
+			//numXnors is used to name the different ands as we add them to the JList
+			//maybe we can label each with their name as we draw them to make the 
+			//distinction for the user to use while picking inputs
+			userGates[numGates].gateName = "XNOR" + numXnors;
+			userGates[numGates].inputs = new String[2];
+			
+			int level = pickLevel();
+			
+			//makes sure that the level is valid and creates the gate
+			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
+				
+				if(userGates[numGates].finalOutput)
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
+				else
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				gates.addElement(userGates[numGates].gateName);
+				
+				drawLevels[drawLevels.length - level].setVisible(false);
+				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
+				image = new ImageIcon("images/4inputXNOR.png");
+				JLabel label = new JLabel(image);
+				label.setVisible(true);
+				drawLevels[drawLevels.length - level].add(label);
+				drawLevels[drawLevels.length - level].setVisible(true);
+				
+				numGates++;
+				numXnors++;	
+			}
 		}
 		
 		//xor gate with 2 inputs
@@ -1099,10 +1201,80 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].setVisible(true);
 				
 				numGates++;
-				numXors++;
-				
+				numXors++;	
 			}
+		}
+		
+		//xor gate with 3 inputs
+		if(source.equals(xor3)){
 			
+			//set up values in the new logic gate
+			userGates[numGates] = new XORGate(3);
+			
+			//numXors is used to name the different ands as we add them to the JList
+			//maybe we can label each with their name as we draw them to make the 
+			//distinction for the user to use while picking inputs
+			userGates[numGates].gateName = "XOR" + numXors;
+			userGates[numGates].inputs = new String[2];			
+			
+			int level = pickLevel();
+			
+			//makes sure that the level is valid and creates the gate
+			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
+								
+				if(userGates[numGates].finalOutput)
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
+				else
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				gates.addElement(userGates[numGates].gateName);
+				
+				drawLevels[drawLevels.length - level].setVisible(false);
+				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
+				image = new ImageIcon("images/3inputXOR.png");
+				JLabel label = new JLabel(image);
+				label.setVisible(true);
+				drawLevels[drawLevels.length - level].add(label);
+				drawLevels[drawLevels.length - level].setVisible(true);
+				
+				numGates++;
+				numXors++;	
+			}
+		}
+				
+		//xor gate with 4 inputs
+		if(source.equals(xor4)){
+			
+			//set up values in the new logic gate
+			userGates[numGates] = new XORGate(4);
+			
+			//numXors is used to name the different ands as we add them to the JList
+			//maybe we can label each with their name as we draw them to make the 
+			//distinction for the user to use while picking inputs
+			userGates[numGates].gateName = "XOR" + numXors;
+			userGates[numGates].inputs = new String[2];			
+			
+			int level = pickLevel();
+			
+			//makes sure that the level is valid and creates the gate
+			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
+								
+				if(userGates[numGates].finalOutput)
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
+				else
+					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				gates.addElement(userGates[numGates].gateName);
+				
+				drawLevels[drawLevels.length - level].setVisible(false);
+				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
+				image = new ImageIcon("images/4inputXOR.png");
+				JLabel label = new JLabel(image);
+				label.setVisible(true);
+				drawLevels[drawLevels.length - level].add(label);
+				drawLevels[drawLevels.length - level].setVisible(true);
+				
+				numGates++;
+				numXors++;	
+			}
 		}
 		
 		//User clicks "Simulate" button
@@ -1119,10 +1291,16 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			output.add(label);
 			output.setVisible(true);
 			
+			//needed to redo how the variables were calculated since not keeping them in nodeList anymore
 			int variables = 0;
-			for(int i = 0; i < theMainLogic.nodeList.size(); i++) {
-				if(theMainLogic.nodeList.get(i) instanceof varGate)
-					variables++;
+			if(flagZ) {
+				variables = 4;
+			} else if (flagY) {
+				variables = 3;
+			} else if (flagX) {
+				variables = 2;
+			} else if (flagW) {
+				variables = 1;
 			}
 			
 			String[][] outputTable = OutputTable.buildTable(boolExp, variables);
@@ -1184,6 +1362,12 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			numXnors = 0;
 			numXors = 0;
 			numNots = 0;
+			
+			//Reset all of the variable flags
+			flagW = false;
+			flagX = false;
+			flagY = false;
+			flagZ = false;
 			
 			//Remove all choices for input gates in connection selector
 			selectGate.removeAllItems();
