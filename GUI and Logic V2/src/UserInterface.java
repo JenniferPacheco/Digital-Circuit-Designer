@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -128,6 +129,14 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	
 	void CreateUI() {
 		
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		UIManager.put("swing.boldMetal", Boolean.FALSE);
 		
 		//initialize 0 gates in each level
 		numGatesInLevel[0]=0;
@@ -143,7 +152,7 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		
 		//create the menu bar
 		JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(new Color(154, 165, 127));
+        //menuBar.setBackground(new Color(154, 165, 127));
         menuBar.setPreferredSize(new Dimension(1080, 40));
         
         //and gate menu
@@ -354,15 +363,15 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		newMenu.add(submit);
 		submit.setBounds(200, 450, 100, 25);
         
-        JLabel yellowLabel = new JLabel();
-        yellowLabel.setOpaque(true);
-        yellowLabel.setBackground(new Color(248, 213, 131));
-        yellowLabel.setPreferredSize(new Dimension(200, 180));
+        JLabel coloredLabel = new JLabel();
+        coloredLabel.setOpaque(true);
+        coloredLabel.setBackground(new Color(173, 194, 235));
+        coloredLabel.setPreferredSize(new Dimension(200, 180));
         
-        newMenu.getContentPane().add(yellowLabel);
+        newMenu.getContentPane().add(coloredLabel);
 		
 	    frame.setJMenuBar(menuBar);
-	    frame.getContentPane().add(yellowLabel);
+	    frame.getContentPane().add(coloredLabel);
 	    frame.setVisible(true);
 	    
 	}
@@ -547,11 +556,11 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	        		for (int j = 0; j < numGates; j++) {
 	        			if (userGates[j].gateName == userGates[index].inputs[i]) {
 	        				theMainLogic.makeConnection(theMainLogic.nodeList.get(j), theMainLogic.nodeList.get(index));
+	        				drawConnections(theMainLogic.nodeList.get(j), theMainLogic.nodeList.get(index), i, theMainLogic.nodeList.get(index).numInputs);
 	        				break;
 	        			}
 	        		}
 	        		
-	        		//connections to be made; makeConnections keeps giving me errors despite valid inputs?
 	        		System.out.println(userGates[index].gateName + " line to " + userGates[index].inputs[i]);
 	        	}       
 	        }
@@ -581,11 +590,15 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				gates.addElement(userGates[numGates].gateName);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				drawLevels[drawLevels.length - level].setVisible(false);
 				centerGates(level);
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -621,6 +634,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -628,6 +643,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -662,6 +679,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -669,6 +688,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -700,6 +721,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -707,6 +730,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -738,6 +763,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -745,6 +772,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -778,6 +807,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -785,6 +816,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -818,6 +851,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -825,6 +860,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputNAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -858,6 +895,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -865,6 +904,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputNAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -898,6 +939,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -905,6 +948,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputNAND.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -938,6 +983,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -945,6 +992,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -978,6 +1027,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
 				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -985,6 +1036,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1017,6 +1070,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1024,6 +1080,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1056,6 +1114,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1063,6 +1124,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/NOT.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1095,6 +1158,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1102,6 +1168,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputXNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1132,6 +1200,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1139,6 +1210,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputXNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1169,6 +1242,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1176,6 +1252,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputXNOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1206,6 +1284,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1213,6 +1294,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/2inputXOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1243,6 +1326,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1250,6 +1336,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/3inputXOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
+				label.setName(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1280,6 +1368,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
 				else
 					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
+				
+				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+				
 				gates.addElement(userGates[numGates].gateName);
 				
 				drawLevels[drawLevels.length - level].setVisible(false);
@@ -1287,6 +1378,7 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
 				image = new ImageIcon("images/4inputXOR.png");
 				JLabel label = new JLabel(image);
+				label.setToolTipText(userGates[numGates].gateName);
 				label.setVisible(true);
 				drawLevels[drawLevels.length - level].add(label);
 				drawLevels[drawLevels.length - level].setVisible(true);
@@ -1502,8 +1594,31 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		
 	}
 	
-	public void drawConnections(LogicGate input, LogicGate output, int inputNumber) {
+	public void drawConnections(LogicGate output, LogicGate input, int inputNumber, int totalInputs) {
 		
+		Point inputLocation = new Point(), outputLocation = new Point();
+		for(int i = 0; i < drawLevels.length; i++) {
+			for(int j = 0; j < drawLevels[i].getComponentCount(); j++) {
+				if(drawLevels[i].getComponent(j).getName() != null && input.gateName.equals(drawLevels[i].getComponent(j).getName()))
+					inputLocation = drawLevels[i].getComponent(j).getLocationOnScreen();
+				if(drawLevels[i].getComponent(j).getName() != null && output.gateName.equals(drawLevels[i].getComponent(j).getName()))
+					outputLocation = drawLevels[i].getComponent(j).getLocationOnScreen();
+			}
+		}
+		
+		Graphics g = frame.getGraphics();
+		if(totalInputs == 1)
+			g.drawLine((int)inputLocation.getX() + 20, (int)inputLocation.getY() + 35, 
+					(int)outputLocation.getX() + 95, (int)outputLocation.getY() + 35);
+		if(totalInputs == 2)
+			g.drawLine((int)inputLocation.getX() + 20, (int)inputLocation.getY() + 20 + inputNumber * 25, 
+					(int)outputLocation.getX() + 95, (int)outputLocation.getY() + 35);
+		else if (totalInputs == 3)
+			g.drawLine((int)inputLocation.getX() + 20, (int)inputLocation.getY() + 20 + inputNumber * 15, 
+					(int)outputLocation.getX() + 95, (int)outputLocation.getY() + 35);
+		else if (totalInputs == 4)
+			g.drawLine((int)inputLocation.getX() + 20, (int)inputLocation.getY() + 20 + inputNumber * 10, 
+					(int)outputLocation.getX() + 95, (int)outputLocation.getY() + 35);
 	}
 	
 	
