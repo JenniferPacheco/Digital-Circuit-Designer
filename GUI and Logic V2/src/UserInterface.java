@@ -148,7 +148,6 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		frame = new JFrame("Digital Circuit Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setSize(1080, 720);
 		
 		//create the menu bar
 		JMenuBar menuBar = new JMenuBar();
