@@ -148,6 +148,7 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		frame = new JFrame("Digital Circuit Designer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setMinimumSize(new Dimension(900, 720));
 		
 		//create the menu bar
 		JMenuBar menuBar = new JMenuBar();
@@ -246,13 +247,16 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
         manual.addActionListener(this);
         helpMenu.add(manual);
         
+        Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        int panelWidth = ((int)d.getWidth() - 160)/4;
+        
         //add the 4 drawing panels
         for(int i = 0; i<4; i++){
         	//array so that you can index the individual panels while drawing the gates
         	drawLevels[i] = new JPanel();
         	drawLevels[i].setLayout(new BoxLayout(drawLevels[i], BoxLayout.Y_AXIS));
         	frame.add(drawLevels[i]);
-        	drawLevels[i].setBounds(80 + 300*i, 20, 300, 290);
+        	drawLevels[i].setBounds(80 + panelWidth*i, 20, panelWidth, 290);
         	
         }
         
