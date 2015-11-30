@@ -14,28 +14,45 @@ public class XORGate extends LogicGate{
 		int numOnes = 0;
 		String variables = "";
 		
+//		for (int i = 0; i < inputConnections.size(); i++) {
+//			LogicGate test = inputConnections.get(i);
+//			
+//			if (test.output == "") {
+//				test.performOperation();
+//			}
+//			
+//			if (test.output == "1") {
+//				numOnes++;
+//			} else {
+//				if (variables == "") {
+//					variables = test.output;
+//				} else {
+//					variables += "^" + test.output;
+//				}
+//			}
+//		}
+//		
+//		if (numOnes % 2 == 0) {
+//			this.output = "(" + variables + "^0)";
+//		} else {
+//			this.output = "(" + variables + "^1)";
+//		}
+			
 		for (int i = 0; i < inputConnections.size(); i++) {
-			LogicGate test = inputConnections.get(i);
+			LogicGate testGate = inputConnections.get(i);
 			
-			if (test.output == "") {
-				test.performOperation();
+			//check to make sure the testGate has a defined output
+			if (testGate.output == "") {
+				testGate.performOperation();
 			}
 			
-			if (test.output == "1") {
-				numOnes++;
+			if (this.output == "") {
+				this.output = "(" + testGate.output;
+			} else if (i + 1 == inputConnections.size()){
+				this.output += "^" + testGate.output + ")";
 			} else {
-				if (variables == "") {
-					variables = test.output;
-				} else {
-					variables += " ^ " + test.output;
-				}
+				this.output += "^" + testGate.output;
 			}
-		}
-		
-		if (numOnes % 2 == 0) {
-			this.output = "(" + variables + " ^ 0)";
-		} else {
-			this.output = "(" + variables + " ^ 1)";
 		}
 	}
 	

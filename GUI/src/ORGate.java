@@ -26,9 +26,15 @@ public class ORGate extends LogicGate{
 				break;
 			} else {
 				if (this.output == "") {
-					this.output = test.output;
+					if (i + 1 == inputConnections.size()) {
+						this.output = test.output;
+					} else {
+						this.output = "(" + test.output;
+					}
+				} else if (i + 1 == inputConnections.size()) {
+					this.output += "+" + test.output + ")";
 				} else {
-					this.output += " + " + test.output;
+					this.output += "+" + test.output;
 				}
 			}
 		}

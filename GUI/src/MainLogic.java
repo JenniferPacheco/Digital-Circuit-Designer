@@ -16,6 +16,7 @@ public class MainLogic {
 		for (LogicGate gate : nodeList) {
 			if (gate.finalOutput) {
 				startingNode = gate;
+				break;
 			}
 		}
 		
@@ -48,9 +49,32 @@ public class MainLogic {
 		nodeList.add(newGate);
 	}
 	
+	public void createGate(String operation, int numInputs, boolean finalOutput) {
+		LogicGate newGate = new NOTGate();
+		
+		if (operation == "AND") {
+			newGate = new ANDGate(numInputs);
+		} else if (operation == "NAND") {
+			newGate = new NANDGate(numInputs);
+		} else if (operation == "OR") {
+			newGate = new ORGate(numInputs);
+		} else if (operation == "NOR") {
+			newGate = new NORGate(numInputs);
+		} else if (operation == "XOR") {
+			newGate = new XORGate(numInputs);
+		} else if (operation == "XNOR") {
+			newGate = new XNORGate(numInputs);
+		} else if (operation == "NOT") {
+			newGate = new NOTGate();
+		}
+		
+		newGate.finalOutput = true;
+		nodeList.add(newGate);
+	}
+	
 	public LogicGate createGate(String gateName) {
 		varGate newGate = new varGate(gateName);
-		nodeList.add(newGate);
+		//nodeList.add(newGate);
 		return newGate;
 	}
 	
