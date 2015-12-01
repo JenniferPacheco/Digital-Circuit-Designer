@@ -30,12 +30,5 @@ public class LogicGate {
 	}
 	
 	//method will be overridden by subclasses
-	public void performOperation() {}
-	
-	//method will be overridden by subclasses
-	public void processingState(String state) {}
-	
-	//method will be overridden by subclasses 
-	public void drawMySelf() {}
-	
+	public void performOperation() {}	
 }

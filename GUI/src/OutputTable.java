@@ -4,10 +4,6 @@ public class OutputTable
 	static String[] WXStates = {"00","01","10","11"};
 	static String[] WXYStates = {"000","001","010","011","100","101","110","111"};
 	static String[] WXYZStates = {"0000","0001","0010","0011","0100","0101","0110","0111","1000","1001","1010","1011","1100","1101","1110","1111"};
-	//static String[] AStates = {"0","1"};
-	//static String[] ABStates = {"00","01","11","10"};
-	//static String[] ABCStates = {"000","001","011","010","100","101","111","110"};
-	//static String[] ABCDStates = {"0000","0001","0011","0010","0100","0101","0111","0110","1000","1001","1011","1010","1100","1101","1111","1110"};
 	static String[][] States = {WStates,WXStates,WXYStates,WXYZStates};
 	
 	static String[][] buildTable(String boolStr, int varCount)
@@ -199,5 +195,4 @@ public class OutputTable
 		else
 			return boolStr.charAt(0) + parenReduce(boolStr.substring(1));		
 	}
-
 }

@@ -78,22 +78,6 @@ public class MainLogic {
 		return newGate;
 	}
 	
-	//Method for determining the K-Map
-	//creates output table ;)
-	//Not using this method anymore
-//	public void generateKMap() {
-//		//determine the number of variables being used
-//		//and send the correct blank kmap to the GUI
-//		
-//		//pick a state of the kmap
-//		//process that state
-//		//send answer to GUI to fill in that part of the kmap
-//		//repeat until the kmap is filled
-//		
-//		//done generating the kmap
-//	}
-	
-	
 	//Method for connecting two logic gates
 	public void makeConnection(LogicGate outputGate, LogicGate inputGate) {
 		//add the inputGate to the "outputConnections" of the outputGate
