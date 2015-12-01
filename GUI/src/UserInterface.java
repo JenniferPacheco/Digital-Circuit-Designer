@@ -263,19 +263,19 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
         //simulate button
         connections = new JButton("Connect");
         frame.add(connections);
-        connections.setBounds(450, 325, 100, 25);
+        connections.setBounds(490, 325, 100, 25);
         connections.addActionListener(this);
         
         //simulate button
         simulate = new JButton("Simulate");
         frame.add(simulate);
-        simulate.setBounds(575, 325, 100, 25);
+        simulate.setBounds(615, 325, 100, 25);
         simulate.addActionListener(this);
         
         //clear button
         clear = new JButton("Clear");
         frame.add(clear);
-        clear.setBounds(700, 325, 100, 25);
+        clear.setBounds(740, 325, 100, 25);
         clear.addActionListener(this);
         
         //output JPanel
@@ -425,7 +425,7 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			//the input list to choose from
 			for(int i = 0; i<numGates; i++){
 				
-				if(userGates[i].level >= maxLevel && i != index){
+				if(userGates[i].level > maxLevel && i != index){
 					
 					inputs.addElement(userGates[i].gateName);
 					
