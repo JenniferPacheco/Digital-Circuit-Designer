@@ -1,134 +1,59 @@
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.image.ImageObserver;
-
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-
-//class containing necessary info for each gate
-//class LogicGate{
-//	
-//	int numInputs;
-//	String gateName;
-//	String gateType;
-//	String [] inputs;
-//	int level;
-//	
-//};
+import javax.swing.event.*;
 
 public class UserInterface extends JPanel implements ActionListener, ItemListener, ListSelectionListener{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = 1L;
 
 	//array of logic gates, 13 is max number of gates
 	//4 for each of the first 3 levels and 1 for the last level
 	LogicGate [] userGates = new LogicGate [13]; 
 	
-	
 	ImageIcon image;
 	
 	//initialize counting variables for the number of gates
-	int numGates = 0;
-	int numAnds = 0;
-	int numOrs = 0;
-	int numXors = 0;
-	int numXnors = 0;
-	int numNors = 0;
-	int numNots = 0;
-	int numNands = 0;
+	int numGates = 0, numAnds = 0, numOrs = 0, numXors = 0, numXnors = 0, numNors = 0, numNots = 0, numNands = 0;
 	
 	//flags to know what variables are being used
-	boolean flagW = false;
-	boolean flagX = false;
-	boolean flagY = false;
-	boolean flagZ = false;
+	boolean flagW = false, flagX = false, flagY = false, flagZ = false;
 	
 	//array to hold the number of gates in each level
 	//to ensure that we don't go over the max
 	int [] numGatesInLevel = new int[4];
 
 	//menu items
-	JMenuItem newFile;
-	JMenuItem open;
-	JMenuItem save;
-	
-	JMenuItem input1;
-	JMenuItem input2;
-	JMenuItem input3;
-	JMenuItem zeroInput;
-	JMenuItem oneInput;
-	
-	JMenuItem and2;
-	JMenuItem and3;
-	JMenuItem and4;
-	
-	JMenuItem or2;
-	JMenuItem or3;
-	JMenuItem or4;
-	
-	JMenuItem nand2;
-	JMenuItem nand3;
-	JMenuItem nand4;
-	
-	JMenuItem nor2;
-	JMenuItem nor3;
-	JMenuItem nor4;
-	
-	JMenuItem xor2;
-	JMenuItem xor3;
-	JMenuItem xor4;
-	JMenuItem xnor2;
-	JMenuItem xnor3;
-	JMenuItem xnor4;
+	JMenuItem newFile, open, save, manual;
+	JMenuItem input1, input2, input3, zeroInput, oneInput;
+	JMenuItem and2, and3, and4;
+	JMenuItem or2, or3, or4;
+	JMenuItem nand2, nand3, nand4;
+	JMenuItem nor2, nor3, nor4;
+	JMenuItem xor2, xor3, xor4;
+	JMenuItem xnor2, xnor3, xnor4;
 	JMenuItem not;
-	
-	JMenuItem manual;
 	
 	//array of JPanels for drawing area
 	JPanel[] drawLevels = new JPanel[4];
 	
 	//JPanel to place the output on
 	JPanel output;	
-	
-	JButton simulate;
-	JButton clear;
-	JButton connections;
-	
-	JFrame frame;
-	JFrame newMenu;
+	JButton simulate, clear, connections;
+	JFrame frame, newMenu;
 	
 	//items for the create logic gate new menu that comes
 	//up whenever one of the gates is chosen
 	JList<String> inputList;
 	DefaultListModel<String> inputs;
 	DefaultComboBoxModel<String> gates;
-	JButton showInputs;
-	JButton submit;
+	JButton showInputs, submit;
 	JComboBox<String> selectGate;
 	
 	//connection to the main logic class
 	MainLogic theMainLogic = new MainLogic();
-
-	private Component[] drawLevel;
 	
 	void CreateUI() {
-		
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -139,10 +64,9 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 		UIManager.put("swing.boldMetal", Boolean.FALSE);
 		
 		//initialize 0 gates in each level
-		numGatesInLevel[0]=0;
-		numGatesInLevel[1]=0;
-		numGatesInLevel[2]=0;
-		numGatesInLevel[3]=0;
+		for (int i = 0; i < 4; i++) {
+			numGatesInLevel[i] = 0;
+		}
 		
 		//create the main frame
 		frame = new JFrame("Digital Circuit Designer");
@@ -162,8 +86,8 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
         and2.addActionListener(this);
         andMenu.add(and2);
         and3 = new JMenuItem("3 Inputs", new ImageIcon("images/3inputAND.png"));
-        andMenu.add(and3);
         and3.addActionListener(this);
+        andMenu.add(and3);
         and4 = new JMenuItem("4 Inputs", new ImageIcon("images/4inputAND.png"));
         and4.addActionListener(this);
         andMenu.add(and4);
@@ -376,19 +300,16 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	    frame.setJMenuBar(menuBar);
 	    frame.getContentPane().add(coloredLabel);
 	    frame.setVisible(true);
-	    
 	}
 	
+	//wow, look at that main function
 	public static void main( String[] args ) {
 		UserInterface ui = new UserInterface();
 		ui.CreateUI();
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		Object source = arg0.getSource();
-		
-	}
+	public void itemStateChanged(ItemEvent arg0) {}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
@@ -411,35 +332,25 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			//finds out what that gate's level is to determine the
 			//max level it can search for inputs from
 			for(int i = 0; i<numGates; i++){
-				
 				if(userGates[i].gateName == selectGate.getSelectedItem()){
-					
 					maxLevel = userGates[i].level;
 					index = i;
-					
 				}
-				
 			}
 			
 			//adds all of the elements that are in the same or higher levels to
 			//the input list to choose from
 			for(int i = 0; i<numGates; i++){
-				
 				if(userGates[i].level > maxLevel && i != index){
-					
 					inputs.addElement(userGates[i].gateName);
-					
 				}
-				
 			}
 			
 			inputList.setVisible(true);
-			
 		}
 		
 		//connections button is chosen
 		if(source.equals(connections)){
-			
 			//confirms that there are gates to connect and there is one in the output level
 			if(numGates > 0 && numGatesInLevel[0]==1)
 				createLogicGate();
@@ -451,23 +362,18 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				else
 					JOptionPane.showMessageDialog(frame, "No gate in output level. Add an output gate to level 1.");
 			}
-			
 		}
 		
 		//submit button in the create logic gate menu
 		if(source.equals(submit)){
-			
 			boolean input = false;
 			
 			//finds the index of the selected gate
 			for(int i = 0; i<numGates; i++){
-				
 				if(userGates[i].gateName == selectGate.getSelectedItem()){
-					
 					index = i;	//points to the gate that is receiving the inputs
 								//This is the makeConnection's 'inputGate'
 				}
-				
 			}
 			
 			//loops through to count the number of selections
@@ -482,7 +388,6 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	        
 	        //number of input selections = num of gate inputs
 	        if(chosenCount == userGates[index].numInputs){
-	        	
 	        	int j =0;
 	        	//add the chosen inputs to the gate's input array
 	        	for (int i = minIndex; i <= maxIndex; i++) {
@@ -555,828 +460,177 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	        		System.out.println(userGates[index].gateName + " line to " + userGates[index].inputs[i]);
 	        	}       
 	        }
-		
 		}
 		
 		//and gate with 2 inputs
 		if(source.equals(and2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new ANDGate(2);
-			
-			//numAnds is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "AND" + numAnds;
 			userGates[numGates].inputs = new String[2];        
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				gates.addElement(userGates[numGates].gateName);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				
-				numGates++;
-				numAnds++;
-				
-			}
-			
+			gateCreatorHelper("images/2inputAND.png", "AND");
 		}
 		
 		//and gate with 3 inputs
 		if(source.equals(and3)){
-			
 			//set up values in the new logic gate
-
 			userGates[numGates] = new ANDGate(3);
-			
-			//numAnds is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "AND" + numAnds;
 			userGates[numGates].inputs = new String[3];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numAnds++;
-				
-			}
-			
+			gateCreatorHelper("images/3inputAND.png", "AND");
 		}
 		
 		//and gate with 4 inputs
 		if(source.equals(and4)){
-			
 			//set up values in the new logic gate
-
 			userGates[numGates] = new ANDGate(4);
-			
-			//numAnds is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "AND" + numAnds;
 			userGates[numGates].inputs = new String[4];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numAnds++;
-			}
+			gateCreatorHelper("images/4inputAND.png", "AND");
 		}
 		
 		//or gate with 2 inputs
 		if(source.equals(or2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new ORGate(2);
-			
-			//numOrs is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "OR" + numOrs;
 			userGates[numGates].inputs = new String[2];		
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numOrs++;
-			}
+			gateCreatorHelper("images/2inputOR.png", "OR");
 		}
 		
 		//or gate with 3 inputs
 		if(source.equals(or3)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new ORGate(3);
-			
-			//numOrs is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "OR" + numOrs;
 			userGates[numGates].inputs = new String[3];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numOrs++;
-				
-			}
-			
+			gateCreatorHelper("images/3inputOR.png", "OR");
 		}
 		
 		//or gate with 4 inputs
 		if(source.equals(or4)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new ORGate(4);
-			
-			//numOrs is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "OR" + numOrs;
 			userGates[numGates].inputs = new String[4];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numOrs++;
-				
-			}
-			
+			gateCreatorHelper("images/4inputOR.png", "OR");
 		}
 		
 		//nand gate with 2 inputs
 		if(source.equals(nand2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NANDGate(2);
-			
-			//numNands is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NAND" + numNands;
 			userGates[numGates].inputs = new String[2];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputNAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNands++;
-				
-			}
-			
+			gateCreatorHelper("images/2inputNAND.png", "NAND");
 		}
 		
 		//nand gate with 3 inputs
 		if(source.equals(nand3)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NANDGate(3);
-			
-			//numNands is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NAND" + numNands;
 			userGates[numGates].inputs = new String[3];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-							
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputNAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNands++;
-				
-			}
-			
+			gateCreatorHelper("images/3inputNAND.png", "NAND");
 		}
 		
 		//nand gate with 4 inputs
 		if(source.equals(nand4)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NANDGate(4);
-			
-			//numNands is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NAND" + numNands;
 			userGates[numGates].inputs = new String[4];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputNAND.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNands++;
-				
-			}
-			
+			gateCreatorHelper("images/4inputNAND.png", "NAND");
 		}
 		
 		//nor gate with 2 inputs
 		if(source.equals(nor2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NORGate(2);
-			
-			//numNors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NOR" + numNors;
 			userGates[numGates].inputs = new String[2];
-
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-						
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNors++;
-				
-			}
-			
+			gateCreatorHelper("images/2inputNOR.png", "NOR");
 		}
 		
 		//nor gate with 3 inputs
 		if(source.equals(nor3)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NORGate(3);
-			
-			//numNors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NOR" + numNors;
 			userGates[numGates].inputs = new String[3];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-							
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNors++;
-				
-			}
-			
+			gateCreatorHelper("images/3inputNOR.png", "NOR");
 		}
 		
 		//nor gate with 4 inputs
 		if(source.equals(nor4)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NORGate(4);
-			
-			//numNors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NOR" + numNors;
 			userGates[numGates].inputs = new String[4];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNors++;
-				
-			}
-			
+			gateCreatorHelper("images/4inputNOR.png", "NOR");
 		}
 
 		//not gate
 		if(source.equals(not)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new NOTGate();
-			
-			//numNots is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "NOT" + numNots;
 			userGates[numGates].inputs = new String[1];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/NOT.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numNots++;
-				
-			}
-			
+			gateCreatorHelper("images/NOT.png", "NOT");
 		}
 
 		//xnor gate with 2 inputs
 		if(source.equals(xnor2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XNORGate(2);
-			
-			//numXnors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XNOR" + numXnors;
 			userGates[numGates].inputs = new String[2];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputXNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXnors++;	
-			}
+			gateCreatorHelper("images/2inputXNOR.png", "XNOR");
 		}
 		
 		//xnor gate with 3 inputs
 		if(source.equals(xnor3)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XNORGate(3);
-			
-			//numXnors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XNOR" + numXnors;
 			userGates[numGates].inputs = new String[3];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputXNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXnors++;	
-			}
+			gateCreatorHelper("images/3inputXNOR.png", "XNOR");
 		}
 				
 		//xnor gate with 4 inputs
 		if(source.equals(xnor4)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XNORGate(4);
-			
-			//numXnors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XNOR" + numXnors;
 			userGates[numGates].inputs = new String[4];
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-				
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputXNOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXnors++;	
-			}
+			gateCreatorHelper("images/4inputXNOR.png", "XNOR");
 		}
 		
 		//xor gate with 2 inputs
 		if(source.equals(xor2)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XORGate(2);
-			
-			//numXors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XOR" + numXors;
 			userGates[numGates].inputs = new String[2];			
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/2inputXOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXors++;	
-			}
+			gateCreatorHelper("images/2inputXOR.png", "XOR");
 		}
 		
 		//xor gate with 3 inputs
 		if(source.equals(xor3)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XORGate(3);
-			
-			//numXors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XOR" + numXors;
 			userGates[numGates].inputs = new String[3];			
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/3inputXOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setName(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXors++;	
-			}
+			gateCreatorHelper("images/3inputXOR.png", "XOR");
 		}
 				
 		//xor gate with 4 inputs
 		if(source.equals(xor4)){
-			
 			//set up values in the new logic gate
 			userGates[numGates] = new XORGate(4);
-			
-			//numXors is used to name the different ands as we add them to the JList
-			//maybe we can label each with their name as we draw them to make the 
-			//distinction for the user to use while picking inputs
 			userGates[numGates].gateName = "XOR" + numXors;
 			userGates[numGates].inputs = new String[4];			
-			
-			int level = pickLevel();
-			
-			//makes sure that the level is valid and creates the gate
-			if(level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName){
-								
-				if(userGates[numGates].finalOutput)
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs, true);
-				else
-					theMainLogic.createGate(userGates[numGates].operation,userGates[numGates].numInputs);
-				
-				theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
-				
-				gates.addElement(userGates[numGates].gateName);
-				
-				drawLevels[drawLevels.length - level].setVisible(false);
-				centerGates(level);
-				drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
-				image = new ImageIcon("images/4inputXOR.png");
-				JLabel label = new JLabel(image);
-				label.setToolTipText(userGates[numGates].gateName);
-				label.setVisible(true);
-				drawLevels[drawLevels.length - level].add(label);
-				drawLevels[drawLevels.length - level].setVisible(true);
-				
-				numGates++;
-				numXors++;	
-			}
+			gateCreatorHelper("images/4inputXOR.png", "XOR");
 		}
 		
 		//User clicks "Simulate" button
@@ -1415,15 +669,6 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 				}
 			}
 			
-			/*
-			for(int i = 0; i < outputTable.length; i++) {
-				for(int j = 0; j < outputTable[0].length; j++) {
-					System.out.print(outputTable[i][j] + " ");
-				}
-				System.out.print("\n");
-			}
-			*/
-			
 			JTable table = new JTable(data, columns);
 			JScrollPane sp = new JScrollPane(table);
 			table.setShowGrid(true);
@@ -1431,8 +676,6 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			output.setVisible(false);
 			output.add(sp);
 			output.setVisible(true);
-			
-			
 		}
 		
 		//User clicks "Clear" button
@@ -1457,19 +700,10 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			numGates = 0;
 			
 			//Reset total number of gates of each type to 0
-			numAnds = 0;
-			numNands = 0;
-			numNors =0;
-			numOrs = 0;
-			numXnors = 0;
-			numXors = 0;
-			numNots = 0;
+			numAnds = 0; numNands = 0; numNors = 0; numOrs = 0; numXnors = 0; numXors = 0; numNots = 0;
 			
 			//Reset all of the variable flags
-			flagW = false;
-			flagX = false;
-			flagY = false;
-			flagZ = false;
+			flagW = false; flagX = false; flagY = false; flagZ = false;
 			
 			//Remove all choices for input gates in connection selector
 			selectGate.removeAllItems();
@@ -1483,22 +717,17 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			for(int i = 0; i < numGatesInLevel.length; i++)
 				numGatesInLevel[i] = 0;
 		}
-		
-	}    
+	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
-		
-	}
+	public void valueChanged(ListSelectionEvent arg0) {}
 	
 	public void createLogicGate(){
-
 		//reset the combobox and list upon opening the new menu
 		newMenu.setVisible(true);
 		selectGate.setSelectedIndex(0);
 		inputList.setVisible(false);
-    	inputList.clearSelection();		
-    	
+    	inputList.clearSelection();
     }
 	
 	//Adds padding based on number of gates currently in level, including gate
@@ -1523,66 +752,51 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 	public int pickLevel(){
 		
 		//dialog box to input the level that you want to draw your gate in
-		String temp = JOptionPane.showInputDialog("Pick a drawing level (a number between 1 - 4):");
+		String temp = JOptionPane.showInputDialog("Pick a level 1 - 4:");
 		
 		//invalid (too big or too little) level typed in
 		while(temp != "" && Integer.parseInt(temp)>4 || Integer.parseInt(temp)<1){
-			
 			JOptionPane.showMessageDialog(frame, "Not a valid level. Try again.");
-			temp = JOptionPane.showInputDialog("Pick a drawing level (a number between 1 - 4):");
-			
+			temp = JOptionPane.showInputDialog("Pick a level 1 - 4:");
 		}
 		
 		//levels 4-2 can have max of 4 gates each
 	    if(temp != "" && Integer.parseInt(temp) >= 2 && Integer.parseInt(temp) <= 4){
-	        	
 	       //already 4 gates in that level, pick a different level
 	        while(numGatesInLevel[Integer.parseInt(temp)-1]>3){
-	        		
 	        	JOptionPane.showMessageDialog(frame, "Too many gates in that level. Try again.");
-	        	temp = JOptionPane.showInputDialog("Pick a drawing level (a number between 1 - 4):");
-	        		
+	        	temp = JOptionPane.showInputDialog("Pick a level 1 - 4:");
 	        }
 	        	
 	        //there is room in that level for the gate to be added
 	        if(numGatesInLevel[Integer.parseInt(temp)-1]<=3){
-	        		
 	        	userGates[numGates].level = Integer.parseInt(temp);;
 	        	numGatesInLevel[userGates[numGates].level-1]++;
 	        	return Integer.parseInt(temp);
-	        		
 	        }
-	        	
 	     }
 		 //the last level(1) can only have 1 gate
 	     else{
-	        	
 	    	 if(temp != "") {
 		        //there is already a gate here, try again
 		        while(numGatesInLevel[Integer.parseInt(temp)-1]>0){
-		        		
 		        	JOptionPane.showMessageDialog(frame, "Too many gates in that level. Try again.");
 		        	temp = JOptionPane.showInputDialog("Pick a drawing level (a number between 1 - 4):");
-		        		
 		        }
 		        	
 		        //there is room for a gate here
 		        if(numGatesInLevel[Integer.parseInt(temp)-1]==0){
-		        		
 		        	userGates[numGates].level = Integer.parseInt(temp);
 		        	userGates[numGates].finalOutput = true;
 		        	numGatesInLevel[userGates[numGates].level-1]++;
 		        	return Integer.parseInt(temp);
-		        		
 		        }
 	    	 }
-	        	
 	     }
 	    
 	    //if it makes it here then the level was never valid and therefore the
 	    //gate can't be created
 	    return -1;
-		
 	}
 	
 	public void drawConnections(LogicGate output, LogicGate input, int inputNumber, int totalInputs) {
@@ -1627,18 +841,45 @@ public class UserInterface extends JPanel implements ActionListener, ItemListene
 			else
 				g.drawLine((int)inputLocation.getX() + 20, (int)inputLocation.getY() + 20 + inputNumber * 10, 
 					(int)outputLocation.getX() + 95, (int)outputLocation.getY() + 35);
-		}
-		
-					
+		}		
 	}
 	
-	
-	/*
-	 * Notes:
-	 * Implement drawConnections
-	 * 	-Straight lines, no curves (Drawing shape polygon class? java.awt.geom)
-	 * 	-Completely straight line from output to input is ok, but not preferred
-	 */
-	
-	
+	public void gateCreatorHelper(String imageName, String gateType) {
+		int level = pickLevel();
+		
+		if (level > 0 && gates.getElementAt(numGates)!=userGates[numGates].gateName) {
+			if (userGates[numGates].finalOutput)
+				theMainLogic.createGate(userGates[numGates].operation, userGates[numGates].numInputs, true);
+			else
+				theMainLogic.createGate(userGates[numGates].operation, userGates[numGates].numInputs);
+			
+			theMainLogic.nodeList.get(theMainLogic.nodeList.size() - 1).gateName = userGates[numGates].gateName;
+			
+			gates.addElement(userGates[numGates].gateName);
+			
+			drawLevels[drawLevels.length - level].setVisible(false);
+			centerGates(level);
+			drawLevels[drawLevels.length - level].add(Box.createRigidArea(new Dimension(0,15)));
+			image = new ImageIcon(imageName);
+			JLabel label = new JLabel(image);
+			label.setToolTipText(userGates[numGates].gateName);
+			label.setName(userGates[numGates].gateName);
+			label.setVisible(true);
+			drawLevels[drawLevels.length - level].add(label);
+			drawLevels[drawLevels.length - level].setVisible(true);
+			
+			//keep track of the number of each gate
+			numGates++;
+			switch (gateType) {
+			case "AND": numAnds++; break;
+			case "NAND": numNands++; break;
+			case "OR": numOrs++; break;
+			case "NOR": numNors++; break;
+			case "XOR": numXors++; break;
+			case "XNOR": numXnors++; break;
+			case "NOT": numNots++; break;
+			default: break;
+			}
+		}
+	}
 }
