@@ -1,4 +1,4 @@
-/*
+/* Author: Alexander Masterson
  * This is a helper class for the OutputTable class. This class provides Logical Gate
  * functions for the text analysis program in the OutputTable class. String characters
  * are passed to this class, and this class helps reduce terms in OutputTable.
